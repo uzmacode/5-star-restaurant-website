@@ -1,0 +1,3 @@
+"use client";
+import { useEffect, useState } from "react"; import type { OrderDetails } from "@/types"; import OrderSuccessView from "@/components/sections/OrderSuccessView";
+export default function Page(){const [order,setOrder]=useState<OrderDetails|null>(null);useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem("gt-last-order")||"null") as OrderDetails|null;const requested=new URLSearchParams(window.location.search).get("order");if(!requested||saved?.id===requested)setOrder(saved)}catch{/* ignore malformed local state */}},[]);return order?<OrderSuccessView order={order}/>:<main className="p-32 text-center"><h1 className="font-display text-3xl">No recent order found.</h1></main>}

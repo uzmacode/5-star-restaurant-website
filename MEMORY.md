@@ -1,0 +1,7 @@
+# Garden Table — Next.js Conversion
+## Stack: Next.js 14 / TypeScript / Tailwind / Framer Motion
+## Routes: /, /our-story, /signatures, /seasonal-menu, /experiences, /gallery, /testimonials, /faq, /contact, /reservations, /checkout, /order-success
+## Components: layout/Navbar.tsx, layout/Footer.tsx, layout/Preloader.tsx, layout/WhatsAppButton.tsx, layout/CartDrawer.tsx, sections/Hero.tsx, sections/Story.tsx, sections/SignatureDishes.tsx, sections/MenuSection.tsx, sections/Experiences.tsx, sections/GallerySection.tsx, sections/TestimonialsSection.tsx, sections/FAQSection.tsx, sections/ContactSection.tsx, sections/ReservationsSection.tsx, sections/CheckoutView.tsx, sections/OrderSuccessView.tsx, sections/OrdersHistoryModal.tsx, ui/Reveal.tsx, ui/aceternity/*
+## Conversion notes: App Router replaces BrowserRouter and route state. Shared chrome and CartProvider are mounted in the root layout. Checkout persists orders and navigates to URL-based order-success. Source Vite project remains unchanged.
+## Known issues: External Unsplash images require network access at runtime.
+## Theme notes: Colorful flat 2D pop-art palette lives in src/app/globals.css. Named tokens are ink, paper, red, yellow, green, blue, pink, mint, butter, blush, and sky; --pop remains a red alias for existing components. Section backgrounds follow the alternating pastel rhythm from 58-colorful-2d.md. Keep 3px ink borders, wobbly radii, unblurred black offset shadows, halftones, sketch fonts, and grayscale-until-hover image behavior intact.
