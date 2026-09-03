@@ -24,12 +24,11 @@ function Bowl({ src, alt, className, sizes = "180px" }: { src: string; alt: stri
 }
 
 export function Story({ teaser = false }: { teaser?: boolean }) {
-  /* ============ HOME TEASER — editorial magazine spread ============ */
+  /* ============ HOME TEASER ============ */
   if (teaser) {
     return (
       <section id="story" className="py-24 bg-[var(--paper)] overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-center">
-          {/* LEFT — tilted photo with tape corners + speech bubble */}
           <div className="relative aspect-[4/5] max-w-md mx-auto lg:mx-0">
             <div className="absolute inset-0 rotate-[-3deg] bg-[var(--card)] p-3 pb-16 border-[3px] border-[var(--ink)] comic-shadow">
               <div className="relative w-full h-full overflow-hidden">
@@ -40,12 +39,11 @@ export function Story({ teaser = false }: { teaser?: boolean }) {
             <span className="absolute -top-2 -right-2 w-16 h-6 bg-[var(--butter)]/90 border border-[var(--ink)]/20 rotate-[45deg] z-10" />
             <span className="absolute -top-3 right-8 sketch-alt bg-[var(--flame)] text-[var(--card)] px-3 py-1 font-mono-price text-[10px] font-bold tracking-widest rotate-[6deg] z-10">EST. 2012</span>
             <div className="speech-bubble absolute -bottom-6 -right-4 lg:-right-8 w-56 p-4 rotate-[3deg] z-20">
-              <span className="font-display text-5xl text-[var(--flame)] leading-none">"</span>
+              <span className="font-display text-5xl text-[var(--flame)] leading-none">{"\u201C"}</span>
               <p className="font-display italic text-base leading-tight -mt-2">The soil whispers. We listen, then serve.</p>
             </div>
           </div>
 
-          {/* RIGHT — editorial copy */}
           <div className="space-y-5">
             <div className="flex flex-wrap gap-2">
               <span className="sketch-alt inline-flex items-center gap-1.5 bg-[var(--card)] px-3 py-1 font-mono-price text-[10px] uppercase tracking-widest"><Leaf className="w-3 h-3 text-[var(--olive)]" /> Kent soil</span>
@@ -53,7 +51,7 @@ export function Story({ teaser = false }: { teaser?: boolean }) {
             </div>
             <h2 className="font-display text-4xl sm:text-6xl leading-[.95]">A sanctuary where nature sets <i className="text-[var(--flame)]">the rhythm</i></h2>
             <p className="text-[var(--ink)]/75 text-base sm:text-lg leading-relaxed">
-              Established in 2012 within a heritage Victorian conservatory in Kensington, The Garden Table was conceived as a communion between classical French technique and Britain's micro-climates.
+              Established in 2012 within a heritage Victorian conservatory in Kensington, The Garden Table was conceived as a communion between classical French technique and Britain&apos;s micro-climates.
             </p>
             <p className="font-serif-subtle italic text-lg text-[var(--olive)]">
               15 years, 50,000 guests, and three green Michelin stars later — our story is only just beginning.
@@ -78,7 +76,7 @@ export function Story({ teaser = false }: { teaser?: boolean }) {
     );
   }
 
-  /* ============ /OUR-STORY — full journey + signature finale ============ */
+  /* ============ /OUR-STORY ============ */
   return (
     <section id="story" className="relative pt-40 sm:pt-44 pb-0 bg-[var(--paper)] overflow-hidden">
       <div className="max-w-3xl mx-auto px-6 text-center space-y-6 mb-20">
@@ -146,13 +144,12 @@ export function Story({ teaser = false }: { teaser?: boolean }) {
         </div>
       </div>
 
-      {/* ====== THE SIGNATURE — proper closing panel ====== */}
+      {/* ====== THE SIGNATURE ====== */}
       <div className="relative mt-24 bg-[var(--ink)] text-[var(--card)] overflow-hidden">
         <svg className="absolute -top-px left-0 w-full text-[var(--paper)]" viewBox="0 0 1440 60" fill="currentColor" preserveAspectRatio="none" aria-hidden>
           <path d="M0,0 L0,20 C240,60 480,60 720,30 C960,0 1200,10 1440,40 L1440,0 Z" />
         </svg>
 
-        {/* halftone dots */}
         <div className="absolute top-10 right-0 w-40 h-40 halftone opacity-[0.08]" />
         <div className="absolute bottom-10 left-0 w-32 h-32 halftone opacity-[0.08]" />
 
@@ -169,7 +166,7 @@ export function Story({ teaser = false }: { teaser?: boolean }) {
           </div>
 
           <div>
-            <span className="font-display text-7xl md:text-8xl text-[var(--flame)] leading-none block">"</span>
+            <span className="font-display text-7xl md:text-8xl text-[var(--flame)] leading-none block">{"\u201C"}</span>
             <p className="font-display italic text-3xl md:text-5xl leading-[1.05] -mt-10">
               The soil whispers.<br />We listen,<br />then <span className="text-[var(--flame)]">serve</span>.
             </p>
