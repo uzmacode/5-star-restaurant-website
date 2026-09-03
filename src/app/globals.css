@@ -68,3 +68,8 @@ footer a:hover { color: var(--flame); }
 .social-square { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 3px solid var(--ink); color: var(--ink); font-size: 10px; font-weight: 800; box-shadow: 3px 3px 0 var(--ink); }
 .social-square:hover { transform: translate(-2px,-2px); }
 header nav a:hover::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 3px; background: var(--flame); transform: rotate(-2deg); }
+/* kill stray pseudo-element underlines in navbar */
+header nav a::after,
+header nav a::before {
+  content: none !important;
+}
