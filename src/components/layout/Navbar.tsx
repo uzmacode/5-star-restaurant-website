@@ -122,6 +122,7 @@ export function Navbar() {
                 </b>
               )}
             </button>
+            <Link href="/my-table" className="hidden sm:inline text-xs font-bold hover:text-[var(--flame)]">My Table</Link>
             <Link href="/reservations" className="btn-2d hidden md:inline-flex px-4 py-2 bg-[var(--flame)] text-[var(--card)] text-xs uppercase">
               <Calendar className="w-3" /> Reserve
             </Link>

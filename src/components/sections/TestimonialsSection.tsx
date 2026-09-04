@@ -80,14 +80,15 @@ export function TestimonialsSection() {
           </div>
 
           {/* nav buttons */}
-          <div className="flex justify-center gap-4 mt-8">
+           <div className="flex justify-center gap-4 mt-8">
             <motion.button whileTap={{ scale: 0.85 }} whileHover={{ rotate: -6 }} onClick={() => paginate(-1)} aria-label="Previous review" className="w-12 h-12 rounded-full border-[3px] border-[var(--ink)] bg-[var(--card)] comic-shadow-sm grid place-items-center">
               <ChevronLeft className="w-5 h-5" />
             </motion.button>
-            <motion.button whileTap={{ scale: 0.85 }} whileHover={{ rotate: 6 }} onClick={() => paginate(1)} aria-label="Next review" className="w-12 h-12 rounded-full border-[3px] border-[var(--ink)] bg-[var(--flame)] text-[var(--card)] comic-shadow-sm grid place-items-center">
+             <motion.button whileTap={{ scale: 0.85 }} whileHover={{ rotate: 6 }} onClick={() => paginate(1)} aria-label="Next review" className="w-12 h-12 rounded-full border-[3px] border-[var(--ink)] bg-[var(--flame)] text-[var(--card)] comic-shadow-sm grid place-items-center">
               <ChevronRight className="w-5 h-5" />
-            </motion.button>
-          </div>
+             </motion.button>
+           </div>
+           <div className="flex justify-center items-center gap-2 mt-5" aria-label="Testimonial pages">{testimonials.map((item, i) => <button key={item.id} onClick={() => setPage([i, i > page ? 1 : -1])} aria-label={`Show testimonial ${i + 1}`} className={`w-3 h-3 rounded-full border-2 border-[var(--ink)] ${page === i ? "bg-[var(--flame)]" : "bg-[var(--card)]"}`} />)}</div>
         </div>
       </div>
     </section>

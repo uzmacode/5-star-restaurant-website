@@ -1,0 +1,2 @@
+import { db, fail } from "../_lib/db";
+export async function POST(request: Request) { try { const body = await request.json(); if (!body.name || !body.email || !body.message) return fail("Name, email, and message are required"); const message = await db.contactMessage.create({ data: { name: body.name, email: body.email, subject: body.subject || null, message: body.message } }); return Response.json(message, { status: 201 }); } catch { return fail("Could not send message", 500); } }

@@ -12,6 +12,7 @@
     --flame-deep: #C74A24;
     --espresso: #2A1A12;
     --olive: #7A8450;
+    --sage: #DCE2C1;
     --butter: #F6C15B;
   }
   html, body { overflow-x: clip; background: var(--paper); color: var(--ink); font-family: var(--font-mono-price), system-ui, sans-serif; }

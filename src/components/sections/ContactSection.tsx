@@ -1,15 +1,18 @@
 "use client";
-import { motion } from "framer-motion";
+import { FormEvent, useState } from "react"; import { motion } from "framer-motion";
 import { Clock, ExternalLink, Mail, MapPin, Navigation, Phone, Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { RESTAURANT_INFO } from "@/data/restaurantData";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { showToast } from "@/components/layout/ToastNotification";
 
 const cardClass = "sketch comic-shadow bg-[var(--card)] p-8 space-y-4";
 
 export function ContactSection() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" }); const [sending, setSending] = useState(false);
   const pathname = usePathname();
   const isFirst = pathname === "/contact";
+  const submit = async (event: FormEvent) => { event.preventDefault(); setSending(true); const response = await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) }); setSending(false); if (response.ok) { setForm({ name: "", email: "", subject: "", message: "" }); showToast("Message received — we reply within 24h"); } else showToast("We could not send that message. Please try again."); };
 
   const infoCards = [
     {
@@ -76,6 +79,8 @@ export function ContactSection() {
             </motion.div>
           ))}
         </div>
+
+        <form onSubmit={submit} className="sketch comic-shadow bg-[var(--card)] p-8 mt-12 max-w-3xl mx-auto space-y-4"><h3 className="font-display text-3xl">Write to the concierge</h3><div className="grid sm:grid-cols-2 gap-3"><input required placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full border-[3px] border-[var(--ink)] bg-[var(--paper)] p-3 text-sm" /><input required type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full border-[3px] border-[var(--ink)] bg-[var(--paper)] p-3 text-sm" /></div><input placeholder="Subject (optional)" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="w-full border-[3px] border-[var(--ink)] bg-[var(--paper)] p-3 text-sm" /><textarea required rows={4} placeholder="How can we help?" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full border-[3px] border-[var(--ink)] bg-[var(--paper)] p-3 text-sm" /><button disabled={sending} className="btn-2d px-5 py-3 bg-[var(--flame)] text-[var(--card)] text-xs uppercase">{sending ? "Sending..." : "Send Message"}</button></form>
 
         {/* big location card with map */}
         <motion.div

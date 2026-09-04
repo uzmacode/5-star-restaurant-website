@@ -3,8 +3,12 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUp, Instagram, Facebook, Twitter } from "lucide-react";
 import { RESTAURANT_INFO } from "@/data/restaurantData";
+import { FormEvent, useState } from "react";
+import { showToast } from "@/components/layout/ToastNotification";
 
 export function Footer() {
+  const [email, setEmail] = useState("");
+  const subscribe = async (event: FormEvent) => { event.preventDefault(); const response = await fetch("/api/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) }); if (response.ok) { setEmail(""); showToast("You are on the garden list."); } else showToast("Please enter a valid email."); };
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
@@ -31,6 +35,7 @@ export function Footer() {
         >
           <b className="font-display text-xl text-[var(--butter)]">THE GARDEN TABLE</b>
           <p className="text-xs text-[var(--paper)]/70 mt-3">A Michelin-inspired botanical dining experience celebrating seasonal harvests and European craft.</p>
+          <form onSubmit={subscribe} className="mt-5 flex gap-2"><input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" className="min-w-0 w-full border-2 border-[var(--paper)] bg-transparent p-2 text-xs" /><button className="btn-2d shrink-0 bg-[var(--butter)] text-[var(--ink)] px-3 text-[10px] uppercase">Join</button></form>
           <div className="flex gap-2 mt-5">
             {[
               { icon: Instagram, color: "bg-[var(--flame)]", label: "Instagram" },

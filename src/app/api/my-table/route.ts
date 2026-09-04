@@ -1,0 +1,2 @@
+import { db } from "../_lib/db";
+export async function GET(request: Request) { const email = new URL(request.url).searchParams.get("email")?.trim().toLowerCase(); if (!email) return Response.json({ reservations: [], orders: [] }); const [reservations, orders] = await Promise.all([db.reservation.findMany({ where: { email }, orderBy: { createdAt: "desc" } }), db.order.findMany({ where: { email }, include: { items: true }, orderBy: { createdAt: "desc" } })]); return Response.json({ reservations, orders }); }
