@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, Filter, Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ALL_MENU_ITEMS } from "@/data/restaurantData";
@@ -21,16 +21,18 @@ export function MenuSection() {
   const [category, setCategory] = useState("all");
   const [dietary, setDietary] = useState<DietaryTag[]>([]);
   const [added, setAdded] = useState<string | null>(null);
+  const [menuItems, setMenuItems] = useState(ALL_MENU_ITEMS);
   const { addToCart } = useCart();
   const pathname = usePathname();
   const isFirst = pathname === "/seasonal-menu";
+  useEffect(() => { fetch("/api/menu").then((response) => response.ok ? response.json() : Promise.reject()).then(setMenuItems).catch(() => setMenuItems(ALL_MENU_ITEMS)); }, []);
 
   const filtered = useMemo(
-    () => ALL_MENU_ITEMS.filter((item) => (category === "all" || item.category === category) && (dietary.length === 0 || dietary.every((tag) => item.dietary.includes(tag)))),
-    [category, dietary]
+    () => menuItems.filter((item) => (category === "all" || item.category === category) && (dietary.length === 0 || dietary.every((tag) => item.dietary.includes(tag)))),
+    [category, dietary, menuItems]
   );
 
-  const countFor = (id: string) => (id === "all" ? ALL_MENU_ITEMS.length : ALL_MENU_ITEMS.filter((i) => i.category === id).length);
+  const countFor = (id: string) => (id === "all" ? menuItems.length : menuItems.filter((i) => i.category === id).length);
 
   const handleAdd = (item: (typeof ALL_MENU_ITEMS)[number]) => {
     addToCart(item);
@@ -46,7 +48,7 @@ export function MenuSection() {
 
         {/* diagonal floating plates — 3 layers: mount / float / hover */}
         <div className="relative h-40 sm:h-48 max-w-2xl mx-auto mb-4">
-          {ALL_MENU_ITEMS.slice(0, 3).map((item, i) => (
+          {menuItems.slice(0, 3).map((item, i) => (
             <motion.div
               key={item.id}
               className="absolute w-24 h-24 sm:w-32 sm:h-32"

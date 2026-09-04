@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       String          @id @default(cuid())
+  email    String          @unique
+  password String
+  sessions AdminSession[]
+}
+
+model AdminSession {
+  token     String   @id
+  adminId   String
+  createdAt DateTime @default(now())
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
+model MenuItem {
+  id              String   @id
+  name            String
+  description     String
+  price           Float
+  category        String
+  dietary         String[]
+  image           String
+  isSignature     Boolean  @default(false)
+  pairingNote     String?
+  calories        Int?
+  preparationTime String?
+  available       Boolean  @default(true)
+}
+
+model Reservation {
+  id                  String   @id @default(cuid())
+  name                String
+  email               String
+  phone               String
+  date                String
+  time                String
+  guests              Int
+  seatingArea         String
+  specialRequests     String?
+  dietaryRequirements String[]
+  occasion            String?
+  notes               String?
+  status              String   @default("pending")
+  createdAt           DateTime @default(now())
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  customerName String
+  email        String
+  total        Float
+  status       String      @default("new")
+  createdAt    DateTime    @default(now())
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id      String  @id @default(cuid())
+  orderId String
+  name    String
+  price   Float
+  qty     Int
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Testimonial {
+  id     String @id
+  quote  String
+  author String
+  role   String
+  rating Int
+  source String
+  date   String
+}
+
+model GalleryImage {
+  id       String @id
+  url      String
+  title    String
+  category String
+  aspect   String
+  caption  String
+}
+
+model Experience {
+  id          String @id
+  year        String
+  title       String
+  description String
+}

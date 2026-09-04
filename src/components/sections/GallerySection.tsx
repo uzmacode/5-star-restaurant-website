@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Leaf, Sparkles, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { GALLERY_ITEMS } from "@/data/restaurantData";
@@ -12,9 +12,11 @@ const ROTS = [-2, 1.5, -1, 2];
 export function GallerySection() {
   const [category, setCategory] = useState("All");
   const [selected, setSelected] = useState<number | null>(null);
+  const [galleryItems, setGalleryItems] = useState(GALLERY_ITEMS);
   const pathname = usePathname();
   const isFirst = pathname === "/gallery";
-  const items = GALLERY_ITEMS.filter((x) => category === "All" || x.category === category);
+  useEffect(() => { fetch("/api/gallery").then((response) => response.ok ? response.json() : Promise.reject()).then(setGalleryItems).catch(() => setGalleryItems(GALLERY_ITEMS)); }, []);
+  const items = galleryItems.filter((x) => category === "All" || x.category === category);
 
   const prev = () => setSelected((s) => (s === null ? s : (s - 1 + items.length) % items.length));
   const next = () => setSelected((s) => (s === null ? s : (s + 1) % items.length));

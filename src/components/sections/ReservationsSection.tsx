@@ -38,7 +38,7 @@ export function ReservationsSection() {
     occasion: "Dinner & Gastronomy",
   });
   const update = (key: string, value: string | number) => setForm((p) => ({ ...p, [key]: value }));
-  const submit = (e: FormEvent) => { e.preventDefault(); setConfirmed(createReservation(form)); };
+  const submit = async (e: FormEvent) => { e.preventDefault(); const response = await fetch("/api/reservations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) }); const saved = response.ok ? await response.json() : null; setConfirmed({ ...createReservation(form), ...(saved || {}) }); };
 
   return (
     <section id="reservations" className={`relative overflow-hidden bg-[var(--ink)] text-[var(--card)] ${isFirst ? "pt-36 sm:pt-40" : "pt-24"} pb-24`}>

@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Quote, Sparkles, Star } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { TESTIMONIALS } from "@/data/restaurantData";
@@ -14,11 +14,13 @@ const variants = {
 
 export function TestimonialsSection() {
   const [[page, dir], setPage] = useState<[number, number]>([0, 0]);
+  const [testimonials, setTestimonials] = useState(TESTIMONIALS);
   const pathname = usePathname();
   const isFirst = pathname === "/testimonials";
-  const current = TESTIMONIALS[page];
+  const current = testimonials[page] || testimonials[0];
+  useEffect(() => { fetch("/api/testimonials").then((response) => response.ok ? response.json() : Promise.reject()).then(setTestimonials).catch(() => setTestimonials(TESTIMONIALS)); }, []);
 
-  const paginate = (d: number) => setPage(([p]) => [(p + d + TESTIMONIALS.length) % TESTIMONIALS.length, d]);
+  const paginate = (d: number) => setPage(([p]) => [(p + d + testimonials.length) % testimonials.length, d]);
 
   return (
     <section id="testimonials" className={`relative overflow-hidden bg-[var(--mint)] ${isFirst ? "pt-36 sm:pt-40" : "pt-10"} pb-24`}>
@@ -49,7 +51,7 @@ export function TestimonialsSection() {
               >
                 {/* counter sticker */}
                 <span className="absolute -top-4 right-6 sketch-alt bg-[var(--butter)] px-3 py-1 font-mono-price text-[10px] font-bold tracking-widest rotate-[4deg]">
-                  {String(page + 1).padStart(2, "0")} / {String(TESTIMONIALS.length).padStart(2, "0")}
+                   {String(page + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
                 </span>
 
                 <span className="inline-block rotate-[-4deg] sketch-alt bg-[var(--butter)] p-2 mb-4">
