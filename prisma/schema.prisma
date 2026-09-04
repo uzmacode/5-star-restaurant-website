@@ -45,6 +45,7 @@ model Reservation {
   time                String
   guests              Int
   seatingArea         String
+  table               String?
   specialRequests     String?
   dietaryRequirements String[]
   occasion            String?

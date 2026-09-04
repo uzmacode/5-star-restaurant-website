@@ -29,6 +29,7 @@ export interface ReservationDetails {
   time: string;
   guests: number;
   seatingArea: 'Botanical Glasshouse' | 'Main Dining Salon' | 'Chef’s Hearth Counter' | 'Herb Garden Terrace';
+  table?: string;
   specialRequests?: string;
   dietaryRequirements?: string[];
   occasion?: string;

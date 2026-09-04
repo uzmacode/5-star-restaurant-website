@@ -1,8 +1,8 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Mail, MapPin, Minus, Phone, Plus, Sparkles, Star } from "lucide-react";
 import { motion } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import type { ReservationDetails } from "@/types";
 import { RESTAURANT_INFO } from "@/data/restaurantData";
@@ -24,6 +24,7 @@ export function ReservationsSection() {
   const { createReservation } = useCart();
   const [confirmed, setConfirmed] = useState<ReservationDetails | null>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isFirst = pathname === "/reservations";
 
   const [form, setForm] = useState({
@@ -36,7 +37,9 @@ export function ReservationsSection() {
     seatingArea: "Botanical Glasshouse" as ReservationDetails["seatingArea"],
     specialRequests: "",
     occasion: "Dinner & Gastronomy",
+    table: "",
   });
+  useEffect(() => { const table = searchParams.get("table"); const time = searchParams.get("time"); const occasion = searchParams.get("occasion"); const guests = Number(searchParams.get("guests")); if (table || time || occasion || guests) setForm((previous) => ({ ...previous, ...(table ? { table } : {}), ...(time ? { time } : {}), ...(occasion ? { occasion } : {}), ...(guests ? { guests: Math.min(8, Math.max(2, guests)) } : {}) })); }, [searchParams]);
   const update = (key: string, value: string | number) => setForm((p) => ({ ...p, [key]: value }));
   const submit = async (e: FormEvent) => { e.preventDefault(); const response = await fetch("/api/reservations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) }); const saved = response.ok ? await response.json() : null; setConfirmed({ ...createReservation(form), ...(saved || {}) }); };
 
@@ -119,7 +122,7 @@ export function ReservationsSection() {
                 <div className="grid grid-cols-2 gap-3">
                   <input required type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className={inputCls} />
                   <select value={form.time} onChange={(e) => update("time", e.target.value)} className={inputCls}>
-                    {SLOTS.map((s) => <option key={s}>{s}</option>)}
+                     {(["Lunch", "Golden Hour", "Candlelit", ...SLOTS]).map((s) => <option key={s}>{s}</option>)}
                   </select>
                 </div>
 

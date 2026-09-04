@@ -15,6 +15,7 @@ const links = [
   { slug: "our-story",     label: "Story",      icon: BookOpen },
   { slug: "signatures",    label: "Signatures", icon: Star },
   { slug: "seasonal-menu", label: "Menu",       icon: UtensilsCrossed },
+  { slug: "composer",     label: "Composer",   icon: Sparkles },
   { slug: "experiences",   label: "Experience", icon: Sparkles },
   { slug: "gallery",       label: "Gallery",    icon: ImageIcon },
   { slug: "testimonials",  label: "Reviews",    icon: MessageCircle },

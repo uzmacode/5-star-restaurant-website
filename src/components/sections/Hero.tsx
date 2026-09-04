@@ -58,6 +58,7 @@ export function Hero() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Link href="/reservations" className="btn-2d px-8 py-4 bg-[var(--flame)] text-[var(--card)] text-xs uppercase tracking-widest">Reserve Your Table</Link>
             <Link href="/seasonal-menu" className="btn-2d px-8 py-4 bg-[var(--card)] text-[var(--ink)] text-xs uppercase tracking-widest">Explore Menu</Link>
+            <Link href="/composer" className="btn-2d px-8 py-4 bg-[var(--butter)] text-[var(--ink)] text-xs uppercase tracking-widest">Compose Your Evening</Link>
           </motion.div>
 
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }} className="font-serif-subtle italic text-lg mt-8 text-[var(--olive)]">
