@@ -4,17 +4,20 @@
 
 @layer base {
   :root {
-    --paper: #FFF3DF;
-    --cream-2: #FFD9A0;
-    --card: #FFF9EF;
-    --ink: #241611;
-    --flame: #C0311E;
-    --flame-deep: #982418;
-    --espresso: #2A1A12;
+    --cherry: #5D0703;
+    --orange: #FC703C;
+    --peach: #FFA175;
+    --cream: #F4F3E6;
+    --paper: var(--cream);
+    --cream-2: var(--peach);
+    --card: var(--cream);
+    --ink: var(--cherry);
+    --flame: var(--orange);
+    --flame-deep: var(--cherry);
+    --espresso: var(--cherry);
     --olive: #3F6B3F;
     --sage: #3F6B3F;
-    --butter: #F5A524;
-    --peach: #FFD9A0;
+    --butter: var(--peach);
   }
   html, body { overflow-x: clip; background: var(--paper); color: var(--ink); font-family: var(--font-mono-price), system-ui, sans-serif; }
   ::-webkit-scrollbar { width: 7px; }
