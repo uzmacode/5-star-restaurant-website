@@ -1,0 +1,4 @@
+"use client";
+import { useEffect, useState } from "react";
+import { ALL_MENU_ITEMS } from "@/data/restaurantData";
+export default function SpecialsTicker() { const [items, setItems] = useState(ALL_MENU_ITEMS.filter((item) => item.special)); useEffect(() => { fetch("/api/menu").then((r) => r.ok ? r.json() : Promise.reject()).then((data) => setItems(data.filter((item: { special?: boolean }) => item.special))).catch(() => undefined); }, []); if (!items.length) return null; return <div className="absolute top-[104px] left-0 right-0 z-20 overflow-hidden border-y-[3px] border-[var(--ink)] bg-[var(--flame)] text-[var(--card)]"><div className="whitespace-nowrap py-2 text-[10px] uppercase tracking-[.18em] font-bold animate-[marquee_22s_linear_infinite]">{[...items, ...items, ...items].map((item, i) => <span key={`${item.id}-${i}`} className="mx-8">Tonight: {item.name} · £{item.price} ★</span>)}</div></div>; }

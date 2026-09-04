@@ -6,7 +6,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   for (const item of ALL_MENU_ITEMS) {
-    await prisma.menuItem.upsert({ where: { id: item.id }, update: { ...item, dietary: item.dietary }, create: { ...item, dietary: item.dietary } });
+    const index = ALL_MENU_ITEMS.indexOf(item);
+    await prisma.menuItem.upsert({ where: { id: item.id }, update: { ...item, dietary: item.dietary, special: index < 3, spice: index % 3, allergens: item.dietary.includes("VG") ? [] : ["Dairy"] }, create: { ...item, dietary: item.dietary, special: index < 3, spice: index % 3, allergens: item.dietary.includes("VG") ? [] : ["Dairy"] } });
   }
   for (const item of GALLERY_ITEMS) {
     await prisma.galleryImage.upsert({ where: { id: item.id }, update: { url: item.image, title: item.title, category: item.category, aspect: item.aspect, caption: item.caption }, create: { id: item.id, url: item.image, title: item.title, category: item.category, aspect: item.aspect, caption: item.caption } });

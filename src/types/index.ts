@@ -12,6 +12,9 @@ export interface MenuItem {
   pairingNote?: string;
   calories?: number;
   preparationTime?: string;
+  special?: boolean;
+  spice?: any;
+  allergens?: string[];
 }
 
 export interface CartItem {

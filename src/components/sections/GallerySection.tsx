@@ -20,6 +20,9 @@ export function GallerySection() {
 
   const prev = () => setSelected((s) => (s === null ? s : (s - 1 + items.length) % items.length));
   const next = () => setSelected((s) => (s === null ? s : (s + 1) % items.length));
+  // The handlers intentionally use the current filtered gallery index.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (selected === null) return; const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setSelected(null); if (event.key === "ArrowLeft") prev(); if (event.key === "ArrowRight") next(); }; window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, [selected, items.length]);
 
   return (
     <section id="gallery" className={`relative overflow-hidden bg-[var(--cream-2)] ${isFirst ? "pt-36 sm:pt-40" : "pt-10"} pb-24`}>

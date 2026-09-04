@@ -31,6 +31,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { cartCount, setIsCartOpen, orders } = useCart();
+  const hour = new Date().getHours(); const day = new Date().getDay(); const openNow = day !== 1 && ((hour >= 12 && hour < 15) || (hour >= 17 && hour < 23));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -106,6 +107,7 @@ export function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
+            <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-bold"><i className={`w-2 h-2 rounded-full ${openNow ? "bg-[var(--olive)]" : "bg-[var(--flame)]"}`} />{openNow ? "Open now · closes 11pm" : "Closed · opens Wed 12pm"}</span>
             {orders.length > 0 && (
               <button onClick={() => setHistory(true)} className="hidden sm:block text-xs font-bold">
                 Orders ({orders.length})

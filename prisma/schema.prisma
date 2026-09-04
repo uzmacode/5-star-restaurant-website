@@ -27,13 +27,16 @@ model MenuItem {
   description     String
   price           Float
   category        String
-  dietary         String[]
+  dietary         String[] @default([])
   image           String
   isSignature     Boolean  @default(false)
   pairingNote     String?
   calories        Int?
   preparationTime String?
   available       Boolean  @default(true)
+  special         Boolean  @default(false)
+  spice           Int      @default(0)
+  allergens       String[] @default([])
 }
 
 model Reservation {

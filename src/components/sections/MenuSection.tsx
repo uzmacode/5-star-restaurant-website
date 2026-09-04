@@ -2,196 +2,24 @@
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { Check, Filter, Plus } from "lucide-react";
+import { Check, Filter, Flame, Plus, Search, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ALL_MENU_ITEMS } from "@/data/restaurantData";
-import type { DietaryTag } from "@/types";
+import type { DietaryTag, MenuItem } from "@/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useCart } from "@/context/CartContext";
 
-const CATEGORIES = [
-  { id: "all", label: "Complete" },
-  { id: "starters", label: "Starters" },
-  { id: "mains", label: "Mains" },
-  { id: "desserts", label: "Desserts" },
-  { id: "botanical-cellar", label: "Cellar" },
-];
+const CATEGORIES = [{ id: "all", label: "Complete" }, { id: "starters", label: "Starters" }, { id: "mains", label: "Mains" }, { id: "desserts", label: "Desserts" }, { id: "botanical-cellar", label: "Cellar" }];
+const filterChoices: { label: string; tag: DietaryTag }[] = [{ label: "Vegan", tag: "VG" }, { label: "Vegetarian", tag: "V" }, { label: "Gluten-Free", tag: "GF" }];
+const story = (item: MenuItem) => `A seasonal Garden Table composition built around ${item.name.toLowerCase()}, with ingredients chosen at the morning harvest and finished with a bright, precise sauce.`;
 
-export function MenuSection() {
-  const [category, setCategory] = useState("all");
-  const [dietary, setDietary] = useState<DietaryTag[]>([]);
-  const [added, setAdded] = useState<string | null>(null);
-  const [menuItems, setMenuItems] = useState(ALL_MENU_ITEMS);
-  const { addToCart } = useCart();
-  const pathname = usePathname();
-  const isFirst = pathname === "/seasonal-menu";
-  useEffect(() => { fetch("/api/menu").then((response) => response.ok ? response.json() : Promise.reject()).then(setMenuItems).catch(() => setMenuItems(ALL_MENU_ITEMS)); }, []);
-
-  const filtered = useMemo(
-    () => menuItems.filter((item) => (category === "all" || item.category === category) && (dietary.length === 0 || dietary.every((tag) => item.dietary.includes(tag)))),
-    [category, dietary, menuItems]
-  );
-
-  const countFor = (id: string) => (id === "all" ? menuItems.length : menuItems.filter((i) => i.category === id).length);
-
-  const handleAdd = (item: (typeof ALL_MENU_ITEMS)[number]) => {
-    addToCart(item);
-    setAdded(item.id);
-    setTimeout(() => setAdded(null), 1200);
-  };
-
-  return (
-    <section id="menu" className={`relative overflow-hidden bg-[var(--paper)] ${isFirst ? "pt-36 sm:pt-40" : "pt-10"} pb-24`}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        <SectionHeading eyebrow="AUTUMN / WINTER TASTING SELECTION" title="The Seasonal Menu" />
-        <p className="text-center font-serif-subtle max-w-xl mx-auto mb-6">Each dish reflects seasonal micro-harvests, organic game, and sustainably caught seafood with low-intervention pairings.</p>
-
-        {/* diagonal floating plates — 3 layers: mount / float / hover */}
-        <div className="relative h-40 sm:h-48 max-w-2xl mx-auto mb-4">
-          {menuItems.slice(0, 3).map((item, i) => (
-            <motion.div
-              key={item.id}
-              className="absolute w-24 h-24 sm:w-32 sm:h-32"
-              style={{ left: `${12 + i * 30}%`, top: `${i * 18}%` }}
-              initial={{ opacity: 0, scale: 0.6, rotate: i % 2 ? -30 : 30 }}
-              whileInView={{ opacity: 1, scale: 1, rotate: i % 2 ? 2 : -2 }}
-              viewport={{ once: true }}
-              transition={{ type: "spring", stiffness: 160, damping: 16, delay: i * 0.15 }}
-            >
-              <motion.div
-                className="w-full h-full"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <motion.div
-                  className="w-full h-full rounded-full border-[3px] border-[var(--ink)] bg-[var(--ink)] p-1.5 comic-shadow cursor-pointer"
-                  whileHover={{ scale: 1.1, rotate: i % 2 ? -4 : 4 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                >
-                  <div className="relative w-full h-full rounded-full overflow-hidden">
-                    <Image src={item.image} alt={item.name} fill sizes="130px" className="object-cover" />
-                  </div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* stepper category tabs */}
-        <div className="relative max-w-2xl mx-auto mb-8">
-          <span className="absolute left-8 right-8 top-[14px] h-[3px] bg-[var(--ink)]/15" />
-          <div className="relative flex justify-between">
-            {CATEGORIES.map((c) => {
-              const active = category === c.id;
-              return (
-                <motion.button key={c.id} onClick={() => setCategory(c.id)} whileTap={{ scale: 0.9 }} className="flex flex-col items-center gap-1.5 group">
-                  <motion.span
-                    animate={active ? { scale: [1, 1.15, 1] } : { scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className={`relative w-7 h-7 rounded-full border-[3px] border-[var(--ink)] grid place-items-center text-[9px] font-bold transition-colors ${active ? "bg-[var(--flame)] text-[var(--card)] comic-shadow-sm -translate-y-0.5" : "bg-[var(--card)] text-[var(--ink)]/60 group-hover:bg-[var(--butter)]"}`}
-                  >
-                    {countFor(c.id)}
-                  </motion.span>
-                  <span className={`text-[10px] uppercase tracking-widest font-bold transition-colors ${active ? "text-[var(--ink)]" : "text-[var(--ink)]/45"}`}>{c.label}</span>
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* dietary chips */}
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
-          className="flex flex-wrap justify-center items-center gap-2 border-t-[3px] border-[var(--ink)]/15 pt-4 mb-10 text-xs"
-        >
-          <Filter className="w-4 text-[var(--flame)]" />
-          {(["V", "VG", "GF", "DF"] as DietaryTag[]).map((tag) => (
-            <motion.button
-              key={tag}
-              variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
-              whileTap={{ scale: 0.92 }}
-              onClick={() => setDietary((p) => (p.includes(tag) ? p.filter((x) => x !== tag) : [...p, tag]))}
-              className={`rounded-full border-[3px] border-[var(--ink)] px-2.5 py-1 font-bold transition-colors ${dietary.includes(tag) ? "bg-[var(--olive)] text-[var(--card)]" : "bg-[var(--card)] hover:bg-[var(--butter)]"}`}
-            >
-              {tag}
-            </motion.button>
-          ))}
-          {dietary.length > 0 && (
-            <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setDietary([])} className="underline">
-              Clear filters
-            </motion.button>
-          )}
-        </motion.div>
-
-        {/* sticker rows */}
-        <div className="max-w-3xl mx-auto">
-          <AnimatePresence mode="popLayout">
-            {filtered.length ? (
-              filtered.map((item, idx) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, y: 30, rotate: idx % 2 ? 2 : -2 }}
-                  animate={{ opacity: 1, y: 0, rotate: idx % 2 ? 0.4 : -0.4 }}
-                  exit={{ opacity: 0, y: -20, scale: 0.96 }}
-                  transition={{ type: "spring", stiffness: 160, damping: 18, delay: (idx % 6) * 0.04 }}
-                  whileHover={{ rotate: 0, y: -4, boxShadow: "6px 6px 0 var(--ink)" }}
-                  className="relative flex items-center gap-4 sm:gap-5 border-[3px] border-[var(--ink)] rounded-2xl bg-[var(--card)] p-4 sm:p-5 mb-5 comic-shadow-sm group"
-                >
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 rotate-[-3deg] border-[3px] border-[var(--ink)] bg-[var(--ink)] p-1 comic-shadow-sm group-hover:rotate-0 transition-transform duration-300">
-                    <div className="relative w-full h-full rounded-lg overflow-hidden">
-                      <Image src={item.image} alt={item.name} fill sizes="100px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline justify-between gap-3">
-                      <h3 className="font-display text-lg sm:text-xl leading-tight">{item.name}</h3>
-                      <b className="font-display text-lg text-[var(--flame)] shrink-0">£{item.price.toFixed(0)}</b>
-                    </div>
-                    <p className="text-xs text-[var(--ink)]/70 leading-relaxed mt-1 line-clamp-2">{item.description}</p>
-                    <div className="flex gap-1.5 mt-2">
-                      {item.dietary.map((tag) => (
-                        <span key={tag} className="text-[8px] font-bold border-2 border-[var(--olive)] text-[var(--olive)] rounded-full px-1.5 py-0.5">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileTap={{ scale: 0.88 }}
-                    whileHover={{ rotate: added === item.id ? 0 : 8 }}
-                    onClick={() => handleAdd(item)}
-                    aria-label={`Add ${item.name}`}
-                    className="w-11 h-11 shrink-0 rounded-xl border-[3px] border-[var(--ink)] bg-[var(--butter)] grid place-items-center shadow-[3px_3px_0_var(--ink)] hover:-translate-y-0.5 active:translate-y-0.5 transition-transform"
-                  >
-                    <AnimatePresence mode="popLayout">
-                      <motion.span
-                        key={added === item.id ? "check" : "plus"}
-                        initial={{ scale: 0, rotate: -90 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        exit={{ scale: 0, rotate: 90 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                        className="grid place-items-center"
-                      >
-                        {added === item.id ? <Check className="w-4 h-4 text-[var(--olive)]" /> : <Plus className="w-4 h-4" />}
-                      </motion.span>
-                    </AnimatePresence>
-                  </motion.button>
-                </motion.div>
-              ))
-            ) : (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center font-display text-2xl">
-                No dishes match those filters.
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </section>
-  );
+export default function MenuSection() {
+  const [category, setCategory] = useState("all"); const [dietary, setDietary] = useState<DietaryTag[]>([]); const [added, setAdded] = useState<string | null>(null); const [menuItems, setMenuItems] = useState(ALL_MENU_ITEMS); const [search, setSearch] = useState(""); const [selected, setSelected] = useState<MenuItem | null>(null); const [quiz, setQuiz] = useState(false); const [quizStep, setQuizStep] = useState(0); const [answers, setAnswers] = useState<string[]>([]); const { addToCart } = useCart(); const pathname = usePathname(); const isFirst = pathname === "/seasonal-menu";
+  useEffect(() => { fetch("/api/menu").then((r) => r.ok ? r.json() : Promise.reject()).then(setMenuItems).catch(() => setMenuItems(ALL_MENU_ITEMS)); }, []);
+  const filtered = useMemo(() => menuItems.filter((item) => (category === "all" || item.category === category) && (!search || `${item.name} ${item.description}`.toLowerCase().includes(search.toLowerCase())) && (dietary.length === 0 || dietary.every((tag) => item.dietary.includes(tag)))), [category, dietary, menuItems, search]);
+  const add = (item: MenuItem) => { addToCart(item); setAdded(item.id); window.setTimeout(() => setAdded(null), 1200); };
+  const recommendations = useMemo(() => { const mood = answers[0]; const hunger = answers[1]; const diet = answers[2]; return menuItems.filter((item) => (!diet || item.dietary.includes(diet as DietaryTag)) && (!mood || (mood === "light" ? item.spice < 2 : mood === "adventurous" ? item.spice >= 2 : item.price >= 25)) && (!hunger || (hunger === "snack" ? item.category !== "mains" : item.category === "mains"))).slice(0, 3); }, [answers, menuItems]);
+  return <section id="menu" className={`relative overflow-hidden bg-[var(--paper)] ${isFirst ? "pt-36 sm:pt-40" : "pt-10"} pb-24`}><div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10"><SectionHeading eyebrow="AUTUMN / WINTER TASTING SELECTION" title="The Seasonal Menu" /><p className="text-center font-serif-subtle max-w-xl mx-auto mb-6">Each dish reflects seasonal micro-harvests, organic game, and sustainably caught seafood with low-intervention pairings.</p><div className="flex flex-wrap justify-center gap-2 mb-5"><div className="relative w-full max-w-xs"><Search className="absolute left-3 top-2.5 w-4 text-[var(--flame)]" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search the menu" className="w-full border-[3px] border-[var(--ink)] bg-[var(--card)] p-2 pl-9 text-xs" /></div>{filterChoices.map(({ label, tag }) => <button key={tag} onClick={() => setDietary((current) => current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag])} className={`rounded-full border-[3px] border-[var(--ink)] px-3 py-2 text-[10px] uppercase font-bold ${dietary.includes(tag) ? "bg-[var(--olive)] text-[var(--card)]" : "bg-[var(--card)] hover:bg-[var(--butter)]"}`}>{label}</button>)}</div><div className="relative max-w-2xl mx-auto mb-8"><span className="absolute left-8 right-8 top-[14px] h-[3px] bg-[var(--ink)]/20" /><div className="relative flex justify-between">{CATEGORIES.map((item) => <button key={item.id} onClick={() => setCategory(item.id)} className="flex flex-col items-center gap-1.5"><span className={`relative w-7 h-7 rounded-full border-[3px] border-[var(--ink)] grid place-items-center text-[9px] font-bold ${category === item.id ? "bg-[var(--flame)] text-[var(--card)] comic-shadow-sm" : "bg-[var(--card)]"}`}>{item.id === "all" ? menuItems.length : menuItems.filter((dish) => dish.category === item.id).length}</span><span className="text-[10px] uppercase tracking-widest font-bold">{item.label}</span></button>)}</div></div><div className="max-w-3xl mx-auto"><AnimatePresence mode="popLayout">{filtered.length ? filtered.map((item, idx) => <motion.div key={item.id} layout initial={{ opacity: 0, y: 30, rotate: idx % 2 ? 2 : -2 }} animate={{ opacity: 1, y: 0, rotate: idx % 2 ? .4 : -.4 }} exit={{ opacity: 0, y: -20 }} whileHover={{ rotate: 0, y: -4, boxShadow: "6px 6px 0 var(--ink)" }} onClick={() => setSelected(item)} className="relative flex items-center gap-4 sm:gap-5 border-[3px] border-[var(--ink)] rounded-2xl bg-[var(--card)] p-4 sm:p-5 mb-5 comic-shadow-sm group cursor-pointer"><div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 rotate-[-3deg] border-[3px] border-[var(--ink)] bg-[var(--ink)] p-1 comic-shadow-sm"><div className="relative w-full h-full rounded-lg overflow-hidden"><Image src={item.image} alt={item.name} fill sizes="100px" className="object-cover" /></div></div><div className="flex-1 min-w-0"><div className="flex items-baseline justify-between gap-3"><h3 className="font-display text-lg sm:text-xl leading-tight">{item.name}</h3><b className="font-display text-lg text-[var(--flame)] shrink-0">£{item.price.toFixed(0)}</b></div><p className="text-xs text-[var(--ink)]/70 leading-relaxed mt-1 line-clamp-2">{item.description}</p><div className="flex gap-1.5 mt-2 items-center">{item.dietary.map((tag) => <span key={tag} className="text-[8px] font-bold border-2 border-[var(--olive)] text-[var(--olive)] rounded-full px-1.5 py-0.5">{tag}</span>)}{Array.from({ length: item.spice || 0 }).map((_, i) => <Flame key={i} className="w-3 h-3 text-[var(--flame)] fill-current" />)}</div></div><button onClick={(event) => { event.stopPropagation(); add(item); }} aria-label={`Add ${item.name}`} className="w-11 h-11 shrink-0 rounded-xl border-[3px] border-[var(--ink)] bg-[var(--butter)] grid place-items-center shadow-[3px_3px_0_var(--ink)]">{added === item.id ? <Check className="w-4 text-[var(--olive)]" /> : <Plus className="w-4" />}</button></motion.div>) : <p className="text-center font-display text-2xl">No dishes match those filters.</p>}</AnimatePresence></div></div><button onClick={() => { setQuiz(true); setQuizStep(0); setAnswers([]); }} className="btn-2d fixed bottom-6 left-5 z-30 px-4 py-3 bg-[var(--flame)] text-[var(--card)] text-xs uppercase"><Flame className="w-4" /> Help me choose</button>{selected && <DishModal item={selected} close={() => setSelected(null)} add={() => { add(selected); setSelected(null); }} />}{quiz && <Quiz step={quizStep} answers={answers} setAnswers={setAnswers} setStep={setQuizStep} close={() => setQuiz(false)} recommendations={recommendations} add={add} />}</section>;
 }
-
-export default MenuSection;
+function DishModal({ item, close, add }: { item: MenuItem; close: () => void; add: () => void }) { return <div className="fixed inset-0 z-50 bg-[var(--ink)]/80 grid place-items-center p-5" onClick={close}><motion.div initial={{ scale: .9, rotate: -2 }} animate={{ scale: 1, rotate: 0 }} className="sketch comic-shadow bg-[var(--card)] max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}><button onClick={close} className="float-right"><X /></button><p className="text-[10px] uppercase tracking-widest text-[var(--flame)] font-bold">The dish story</p><h2 className="font-display text-3xl mt-2">{item.name}</h2><p className="text-sm mt-3">{story(item)}</p><div className="flex flex-wrap gap-2 mt-4">{[...(item.dietary || []), ...(item.allergens || [])].map((tag) => <span key={tag} className="rounded-full border-2 border-[var(--olive)] px-2 py-1 text-[10px]">{tag}</span>)}{Array.from({ length: item.spice || 0 }).map((_, i) => <Flame key={i} className="w-4 text-[var(--flame)] fill-current" />)}</div><div className="flex justify-between items-center border-t-2 border-[var(--ink)]/20 mt-6 pt-4"><b className="font-display text-2xl">£{item.price.toFixed(2)}</b><button onClick={add} className="btn-2d px-4 py-3 bg-[var(--butter)] text-xs uppercase">Add to order <Plus className="w-4" /></button></div></motion.div></div>; }
+function Quiz({ step, answers, setAnswers, setStep, close, recommendations, add }: { step: number; answers: string[]; setAnswers: (answers: string[]) => void; setStep: (step: number) => void; close: () => void; recommendations: MenuItem[]; add: (item: MenuItem) => void }) { const questions = [["What is your mood?", ["light", "rich", "adventurous"]], ["How hungry are you?", ["snack", "feast"]], ["Any dietary preference?", ["", "V", "VG", "GF"]]]; const choose = (answer: string) => { const next = [...answers, answer]; setAnswers(next); setStep(step + 1); }; return <div className="fixed inset-0 z-50 bg-[var(--ink)]/80 grid place-items-center p-5" onClick={close}><div className="sketch comic-shadow bg-[var(--card)] max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>{step < questions.length ? <><p className="text-[10px] uppercase tracking-widest text-[var(--flame)]">Question {step + 1} / 3</p><h2 className="font-display text-3xl mt-2">{questions[step][0]}</h2><div className="grid gap-2 mt-5">{(questions[step][1] as string[]).map((answer) => <button key={answer || "none"} onClick={() => choose(answer)} className="btn-2d justify-center bg-[var(--paper)] px-4 py-3 text-xs uppercase">{answer || "No restriction"}</button>)}</div></> : <><h2 className="font-display text-3xl">Your three bites</h2><div className="space-y-2 mt-4">{recommendations.map((item) => <div key={item.id} className="sketch-alt bg-[var(--paper)] p-3 flex justify-between gap-2"><span><b className="font-display text-lg">{item.name}</b><small className="block">A good match for your evening.</small></span><button onClick={() => add(item)} className="btn-2d px-2 bg-[var(--butter)]"><Plus className="w-3" /></button></div>)}</div><button onClick={close} className="btn-2d mt-5 px-4 py-2 bg-[var(--flame)] text-[var(--card)] text-xs uppercase">Back to menu</button></>}</div></div>; }

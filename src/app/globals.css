@@ -4,16 +4,17 @@
 
 @layer base {
   :root {
-    --paper: #FAF1E6;
-    --cream-2: #F3E7D8;
-    --card: #FFFDF9;
-    --ink: #131313;
-    --flame: #E4572E;
-    --flame-deep: #C74A24;
+    --paper: #FFF3DF;
+    --cream-2: #FFD9A0;
+    --card: #FFF9EF;
+    --ink: #241611;
+    --flame: #C0311E;
+    --flame-deep: #982418;
     --espresso: #2A1A12;
-    --olive: #7A8450;
-    --sage: #DCE2C1;
-    --butter: #F6C15B;
+    --olive: #3F6B3F;
+    --sage: #3F6B3F;
+    --butter: #F5A524;
+    --peach: #FFD9A0;
   }
   html, body { overflow-x: clip; background: var(--paper); color: var(--ink); font-family: var(--font-mono-price), system-ui, sans-serif; }
   ::-webkit-scrollbar { width: 7px; }
@@ -51,8 +52,8 @@ section h2::after { content: "〰"; display: block; color: var(--ink); font-fami
 .hero-section::before, .hero-section::after { position: absolute; z-index: 1; pointer-events: none; font-family: var(--font-display); font-size: 3rem; }
 .hero-section::before { content: "✦"; top: 20%; left: 8%; color: var(--flame); transform: rotate(-12deg); }
 .hero-section::after { content: "★"; right: 8%; bottom: 24%; color: var(--flame); transform: rotate(14deg); }
-#signatures, #menu, #gallery, #faq { background: var(--cream-2); }
-#story, #experiences, #testimonials, #contact { background: var(--paper); }
+#signatures, #menu, #gallery, #faq { background: var(--paper); }
+#story, #experiences, #testimonials, #contact { background: var(--cream-2); }
 #reservations, footer { background: var(--espresso); color: var(--paper); }
 .group\/bento { position: relative; overflow: hidden; }
 .group\/bento::before { content: ""; display: block; height: 10px; background: var(--butter); border-bottom: 3px solid var(--ink); margin: -1.5rem -1.5rem 1rem; }
@@ -73,4 +74,7 @@ header nav a:hover::after { content: ""; position: absolute; left: 0; right: 0; 
 header nav a::after,
 header nav a::before {
   content: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-garnish *, .floating-garnish { animation: none !important; transition: none !important; opacity: .35 !important; }
 }
